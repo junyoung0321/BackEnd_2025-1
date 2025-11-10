@@ -26,4 +26,11 @@ public class HelloController {
         model.addAttribute("name", name);
         return "introduce";
     }
+
+    @GetMapping("/json")
+    @ResponseBody
+    public PersonInfo json() {
+        PersonInfo info = new PersonInfo("정준영", 24);
+        return info;
+    }
 }
