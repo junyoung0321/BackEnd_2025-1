@@ -37,11 +37,11 @@ public class Article {
     public Long getBoardId() { return boardId; }
     public void setBoardId(Long boardId) { this.boardId = boardId; }
 
-    public LocalDateTime getcreateTime() { return createTime; }
-    public void setcreateTime(LocalDateTime createTime) { this.createTime = createTime; }
+    public LocalDateTime getCreateTime() { return createTime; }
+    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 
-    public LocalDateTime getmodifiedTime() { return modifiedTime; }
-    public void setmodifiedTime(LocalDateTime modifiedTime) { this.modifiedTime = modifiedTime; }
+    public LocalDateTime getModifiedTime() { return modifiedTime; }
+    public void setModifiedTime(LocalDateTime modifiedTime) { this.modifiedTime = modifiedTime; }
 
     public String getAuthorName() { return authorName; }
     public void setAuthorName(String authorName) { this.authorName = authorName; }
