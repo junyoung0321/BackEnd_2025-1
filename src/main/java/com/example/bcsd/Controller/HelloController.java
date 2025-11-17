@@ -1,5 +1,6 @@
-package com.example.bcsd;
+package com.example.bcsd.Controller;
 
+import com.example.bcsd.PersonInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
