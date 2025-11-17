@@ -10,6 +10,8 @@ public class Article {
     private Long boardId;
     private LocalDateTime createTime;
     private LocalDateTime modifiedTime;
+    private String authorName;
+    private String boardName;
 
     public Article(String title, String content, Long authorId, Long boardId) {
         this.title = title;
@@ -40,4 +42,10 @@ public class Article {
 
     public LocalDateTime getmodifiedTime() { return modifiedTime; }
     public void setmodifiedTime(LocalDateTime modifiedTime) { this.modifiedTime = modifiedTime; }
+
+    public String getAuthorName() { return authorName; }
+    public void setAuthorName(String authorName) { this.authorName = authorName; }
+
+    public String getBoardName() { return boardName; }
+    public void setBoardName(String boardName) { this.boardName = boardName; }
 }
