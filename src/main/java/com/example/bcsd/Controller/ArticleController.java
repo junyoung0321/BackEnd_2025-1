@@ -106,21 +106,4 @@ public class ArticleController {
         articleStorage.remove(id);
         return ResponseEntity.ok().build();
     }
-
-    private Member saveMember(Member member) {
-        if (member.getId() == null) {
-            member.setId(memberIdCounter.incrementAndGet());
-        }
-        memberStorage.put(member.getId(), member);
-        return member;
-    }
-
-    private Board saveBoard(Board board) {
-        if (board.getId() == null) {
-            board.setId(boardIdCounter.incrementAndGet());
-        }
-        boardStorage.put(board.getId(), board);
-        return board;
-    }
-
 }
