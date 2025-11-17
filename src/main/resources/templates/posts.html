@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 목록</title>
+</head>
+<body>
+    <h1 class="board-title" th:text="${boardName}">게시판 이름</h1>
+
+    <div th:each="article : ${articles}" class="article">
+        <h2 class="article-title" th:text="${article.title}">제목 0</h2>
+        <div class="article-meta">
+            <span th:text="${article.authorName}">회원0</span> |
+            <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}">2024-05-14</span>
+        </div>
+        <p class="article-content" th:text="${article.content}">내용입니다!!</p>
+    </div>
+</body>
+</html>
