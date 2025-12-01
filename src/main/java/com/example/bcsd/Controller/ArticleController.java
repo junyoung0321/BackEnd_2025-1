@@ -1,8 +1,11 @@
 package com.example.bcsd.Controller;
 
 import com.example.bcsd.Model.Article;
+import com.example.bcsd.dto.ArticleCreateRequest;
 import com.example.bcsd.service.ArticleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +35,8 @@ public class ArticleController {
 
     // POST
     @PostMapping
-    public Article createArticle(@RequestBody Article article) {
-        return articleService.createArticle(article);
+    public ResponseEntity<Article> createArticle(@RequestBody @Valid ArticleCreateRequest request) {
+        return ResponseEntity.ok(articleService.createArticle(request));
     }
 
     // PUT
