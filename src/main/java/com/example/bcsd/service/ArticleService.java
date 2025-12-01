@@ -2,7 +2,11 @@ package com.example.bcsd.service;
 
 import com.example.bcsd.dao.ArticleDao;
 import com.example.bcsd.Model.Article;
+import com.example.bcsd.dto.ArticleCreateRequest;
+import com.example.bcsd.exception.InvalidRequestException;
+import com.example.bcsd.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +22,25 @@ public class ArticleService {
         this.articleDao = articleDao;
     }
 
-    @Transactional // 쓰기 작업: 트랜잭션 적용
-    public Article createArticle(Article article) {
+    @Transactional
+    public Article createArticle(ArticleCreateRequest request) {
+        Article article = new Article();
+
+        article.setAuthorId(request.getAuthorId());
+        article.setBoardId(request.getBoardId());
+        article.setTitle(request.getTitle());
+        article.setContent(request.getContent());
+
         return articleDao.save(article);
     }
 
-    @Transactional(readOnly = true) // 읽기 작업
+    @Transactional(readOnly = true)
     public Article getArticle(Long id) {
-        return articleDao.findById(id);
+        try {
+            return articleDao.findById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("존재하지 않는 게시글입니다. id=" + id);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -35,12 +50,20 @@ public class ArticleService {
 
     @Transactional
     public Article updateArticle(Long id, Article article) {
-        article.setId(id);
-        return articleDao.update(article);
+
+        Article existingArticle = getArticle(id);
+
+        existingArticle.setTitle(article.getTitle());
+        existingArticle.setContent(article.getContent());
+
+        return articleDao.update(existingArticle);
     }
 
     @Transactional
     public void deleteArticle(Long id) {
+        // 존재하는지 확인 (없으면 getArticle에서 404 터짐)
+        getArticle(id);
+
         articleDao.delete(id);
     }
 }
