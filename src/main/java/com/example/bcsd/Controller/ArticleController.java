@@ -1,109 +1,50 @@
 package com.example.bcsd.Controller;
 
 import com.example.bcsd.Model.Article;
-import com.example.bcsd.Model.Board;
-import com.example.bcsd.Model.Member;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import com.example.bcsd.service.ArticleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
-@Controller
+@RestController
+@RequestMapping("/articles")
 public class ArticleController {
 
-    private final Map<Long, Article> articleStorage = new ConcurrentHashMap<>();
-    private final AtomicLong articleIdCounter = new AtomicLong();
-    private final Map<Long, Member> memberStorage = new ConcurrentHashMap<>();
-    private final AtomicLong memberIdCounter = new AtomicLong();
-    private final Map<Long, Board> boardStorage = new ConcurrentHashMap<>();
-    private final AtomicLong boardIdCounter = new AtomicLong();
+    private final ArticleService articleService;
 
-    private Article populateArticleDetails(Article article) {
-        Member author = memberStorage.getOrDefault(article.getAuthorId(),
-                new Member(0L, "익명", "", ""));
-        Board board = boardStorage.getOrDefault(article.getBoardId(),
-                new Board(0L, "기본 게시판"));
-
-        article.setAuthorName(author.getName());
-        article.setBoardName(board.getName());
-        return article;
+    @Autowired
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
-    @GetMapping("/posts")
-    public String getPostsView(Model model) {
-        List<Article> articles = new ArrayList<>(articleStorage.values())
-                .stream()
-                .map(this::populateArticleDetails)
-                .collect(Collectors.toList());
-
-        model.addAttribute("articles", articles);
-        String boardName = articles.isEmpty() ? "게시판" : articles.get(0).getBoardName();
-        model.addAttribute("boardName", boardName);
-
-        return "posts";
+    // GET
+    @GetMapping
+    public List<Article> getArticles(@RequestParam Long boardId) {
+        return articleService.getArticlesByBoardId(boardId);
     }
 
-    @GetMapping("/articles")
-    @ResponseBody
-    public ResponseEntity<List<Article>> getAllArticles() {
-        List<Article> articles = new ArrayList<>(articleStorage.values())
-                .stream()
-                .map(this::populateArticleDetails)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(articles);
+    // GET
+    @GetMapping("/{id}")
+    public Article getArticle(@PathVariable Long id) {
+        return articleService.getArticle(id);
     }
 
-    @GetMapping("/articles/{id}")
-    @ResponseBody
-    public ResponseEntity<Article> read(@PathVariable Long id) {
-        Article article = articleStorage.get(id);
-        if (article == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(populateArticleDetails(article));
+    // POST
+    @PostMapping
+    public Article createArticle(@RequestBody Article article) {
+        return articleService.createArticle(article);
     }
 
-    @PostMapping("/articles")
-    @ResponseBody
-    public ResponseEntity<Article> create(@RequestBody Article article) {
-        long newId = articleIdCounter.incrementAndGet();
-        article.setId(newId);
-        article.setCreateTime(LocalDateTime.now());
-        article.setModifiedTime(LocalDateTime.now());
-
-        articleStorage.put(article.getId(), article);
-        return ResponseEntity.ok(populateArticleDetails(article));
+    // PUT
+    @PutMapping("/{id}")
+    public Article updateArticle(@PathVariable Long id, @RequestBody Article article) {
+        return articleService.updateArticle(id, article);
     }
 
-    @PutMapping("/articles/{id}")
-    @ResponseBody
-    public ResponseEntity<Article> update(@PathVariable Long id, @RequestBody Article updated) {
-        Article article = articleStorage.get(id);
-        if (article == null) {
-            return ResponseEntity.notFound().build();
-        }
-        article.setTitle(updated.getTitle());
-        article.setContent(updated.getContent());
-        article.setModifiedTime(LocalDateTime.now());
-
-        return ResponseEntity.ok(populateArticleDetails(article));
-    }
-
-    @DeleteMapping("/articles/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!articleStorage.containsKey(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        articleStorage.remove(id);
-        return ResponseEntity.ok().build();
+    //DELETE
+    @DeleteMapping("/{id}")
+    public void deleteArticle(@PathVariable Long id) {
+        articleService.deleteArticle(id);
     }
 }
