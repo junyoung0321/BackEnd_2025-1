@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.example.bcsd.Model;
 
 import java.sql.Timestamp;
 
