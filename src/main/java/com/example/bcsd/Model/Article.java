@@ -3,7 +3,6 @@ package com.example.bcsd.Model;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "article")
@@ -15,22 +14,18 @@ public class Article {
     @Column(name = "author_id", nullable = false)
     private Long authorId;
 
-    @Column(name = "board_id", nullable = false)
-    private Long boardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp
-    @Column(name = "created_date", updatable = false)
     private Timestamp createdDate;
-
-    @UpdateTimestamp
-    @Column(name = "modified_date")
-    private Timestamp modifiedDate;
 
     public Article() {}
 
@@ -38,14 +33,11 @@ public class Article {
     public void setId(Long id) { this.id = id; }
     public Long getAuthorId() { return authorId; }
     public void setAuthorId(Long authorId) { this.authorId = authorId; }
-    public Long getBoardId() { return boardId; }
-    public void setBoardId(Long boardId) { this.boardId = boardId; }
+    public Board getBoard() { return board; }
+    public void setBoard(Board board) { this.board = board; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
     public Timestamp getCreatedDate() { return createdDate; }
-    public void setCreatedDate(Timestamp createdDate) { this.createdDate = createdDate; }
-    public Timestamp getModifiedDate() { return modifiedDate; }
-    public void setModifiedDate(Timestamp modifiedDate) { this.modifiedDate = modifiedDate; }
 }
