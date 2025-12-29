@@ -13,11 +13,17 @@ public class Board {
 
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "board_id")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Article> articles = new ArrayList<>();
 
     public Board() {}
+
+    public void addArticle(Article article) {
+        this.articles.add(article);
+        if (article.getBoard() != this) {
+            article.setBoard(this);
+        }
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
