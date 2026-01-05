@@ -1,10 +1,20 @@
 package com.example.bcsd.Model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "members")
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
+
+    @Column(nullable = false, length = 100)
     private String password;
+
+    public Member() {}
 
     public Member(Long id, String name, String email, String password) {
         this.id = id;
@@ -24,4 +34,6 @@ public class Member {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+
 }
